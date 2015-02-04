@@ -16,11 +16,11 @@ module GameRules =
         let emptyTiles = (size - initialRows) * 2 * size
         Invalid :: [for i in 1 .. piecesPerPlayer -> BlackMan] @ [for i in 1 .. emptyTiles -> Empty] @ [for i in 1 .. piecesPerPlayer -> WhiteMan]
 
+    let board = startGame
+
     let isGameOver board =
         (board |> List.filter (fun x -> x = BlackKing || x = BlackMan) |> List.isEmpty)
         || (board |> List.filter (fun x -> x = WhiteKing || x = WhiteMan) |> List.isEmpty)
-
-    let board = startGame
 
     (*  The game board:
         Black player
@@ -75,19 +75,12 @@ module GameRules =
             | true  -> initialPosition - 5
             | false -> initialPosition - 4
 
-    let getTile board initialPosition finalPosition =
-        let finalTile =
-            match rowDifference initialPosition finalPosition with
-            | 1 -> board |> List.item finalPosition
-            | _ -> Invalid
-        finalTile
-
     let getTiles board initialPosition direction distance =
         [ for index in 1 .. distance do
-            let finalPosition = getIndex direction initialPosition
+            let testPosition = getIndex direction initialPosition
             // Probably there are unnecessary checks here
-            let tileType = getTile board initialPosition initialPosition
-            let initialPosition = finalPosition
+            let tileType = board |> List.item testPosition
+            let initialPosition = testPosition
             yield tileType
         ]
 
@@ -102,11 +95,9 @@ module GameRules =
         // Get XY coordinates
         let initialPoint = convertToXY initialPosition
         let finalPoint = convertToXY finalPosition
-        // Make sure they are on a diagonal line
         let distanceX = fst finalPoint - fst initialPoint
         let distanceY = snd finalPoint - snd initialPoint
-        if distanceX <> distanceY || distanceX = 0 then
-            failwith "Invalid move"
+
         // Find the direction
         let direction =
             if distanceX > 0 && distanceY < 0 then NE
@@ -114,32 +105,35 @@ module GameRules =
             elif distanceX < 0 && distanceY > 0 then SW
             else NW
     
-        direction, distanceX
+        direction, abs(distanceX), abs(distanceY)
 
     let isMoveAllowed (board: Board) initialPosition finalPosition =
-        let direction, distance = getTrajectory initialPosition finalPosition
-        let piece = board |> List.item initialPosition
-        let coveredTiles = getTiles board initialPosition direction distance
-        let numberOfEmpty = coveredTiles |> List.filter (fun x -> x = Empty) |> List.length
-        let numberOfInvalid = coveredTiles |> List.filter (fun x -> x = Invalid) |> List.length
-        let isLastTileEmpty = coveredTiles |> List.last = Empty
+        let direction, distanceX, distanceY = getTrajectory initialPosition finalPosition
+        if distanceX = distanceY && distanceX <> 0 then
+            let piece = board |> List.item initialPosition
+            let coveredTiles = getTiles board initialPosition direction distanceX
+            let numberOfEmpty = coveredTiles |> List.filter (fun x -> x = Empty) |> List.length
+            let numberOfInvalid = coveredTiles |> List.filter (fun x -> x = Invalid) |> List.length
+            let isLastTileEmpty = coveredTiles |> List.last = Empty
 
-        if numberOfInvalid = 0 && isLastTileEmpty then
-            if canPieceJump piece direction distance then
-                // Check if enemy is second last
-                let enemySpot = coveredTiles |> List.item (distance - 2)
-                let foundEnemy =
-                    match piece with
-                    | BlackKing | BlackMan ->
-                        enemySpot = WhiteKing || enemySpot = WhiteMan
-                    | WhiteKing | WhiteMan ->
-                        enemySpot = BlackKing || enemySpot = BlackMan
-                    | _ -> false
+            if numberOfInvalid = 0 && isLastTileEmpty then
+                if canPieceJump piece direction distanceX then
+                    // Check if enemy is second last
+                    let enemySpot = coveredTiles |> List.item (distanceX - 2)
+                    let foundEnemy =
+                        match piece with
+                        | BlackKing | BlackMan ->
+                            enemySpot = WhiteKing || enemySpot = WhiteMan
+                        | WhiteKing | WhiteMan ->
+                            enemySpot = BlackKing || enemySpot = BlackMan
+                        | _ -> false
         
-                // There must be only one piece in between and it must be the expected enemy
-                foundEnemy && numberOfEmpty = distance - 1
-            elif canPieceMove piece direction distance then
-                numberOfEmpty = distance
+                    // There must be only one piece in between and it must be the expected enemy
+                    foundEnemy && numberOfEmpty = distanceX - 1
+                elif canPieceMove piece direction distanceX then
+                    numberOfEmpty = distanceX
+                else
+                    false
             else
                 false
         else
