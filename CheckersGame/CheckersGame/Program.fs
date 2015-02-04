@@ -16,18 +16,14 @@ let printGame (board: Board) =
             Console.Write("▓");
 
         let myColor =
-            try
-                if isMoveAllowed board 22 index then
-                    ConsoleColor.Green
-                else
-                    ConsoleColor.Red
-            with
-                | ex -> ConsoleColor.DarkRed
+            if index = 22 then
+                ConsoleColor.White
+            elif isMoveAllowed board 22 index then
+                ConsoleColor.Green
+            else
+                ConsoleColor.Red
 
-        if 22 = index then
-            Console.ForegroundColor <- ConsoleColor.White
-        else
-            Console.ForegroundColor <- myColor
+        Console.ForegroundColor <- myColor
 
         match board.Item index with
         | Empty -> Console.Write("-");
@@ -35,6 +31,7 @@ let printGame (board: Board) =
         | BlackMan -> Console.Write("b")
         | WhiteKing -> Console.Write("W")
         | WhiteMan -> Console.Write("w");
+        | _ -> Console.Write("");
 
         Console.ForegroundColor <- ConsoleColor.Gray
         
