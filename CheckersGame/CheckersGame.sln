@@ -7,7 +7,7 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "CheckersGame", "CheckersGam
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Checkers.Core", "Checkers.Core\Checkers.Core.fsproj", "{DAA3A2A3-4349-41DD-B671-C03B8F07BDAD}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Checkers.Core.Tests", "Checkers.Core.Tests\Checkers.Core.Tests.fsproj", "{13E51FB7-B91B-4DDA-8F79-47ADB6A290AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Checkers.Tests", "Checkers.Tests\Checkers.Tests.csproj", "{08271292-CB75-4A16-8BED-A0EDA45213ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{DAA3A2A3-4349-41DD-B671-C03B8F07BDAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DAA3A2A3-4349-41DD-B671-C03B8F07BDAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DAA3A2A3-4349-41DD-B671-C03B8F07BDAD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{13E51FB7-B91B-4DDA-8F79-47ADB6A290AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{13E51FB7-B91B-4DDA-8F79-47ADB6A290AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{13E51FB7-B91B-4DDA-8F79-47ADB6A290AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{13E51FB7-B91B-4DDA-8F79-47ADB6A290AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08271292-CB75-4A16-8BED-A0EDA45213ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08271292-CB75-4A16-8BED-A0EDA45213ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08271292-CB75-4A16-8BED-A0EDA45213ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08271292-CB75-4A16-8BED-A0EDA45213ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
